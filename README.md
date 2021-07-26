@@ -1,1 +1,0 @@
-# Tomography image segmentation

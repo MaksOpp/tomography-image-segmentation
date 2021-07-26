@@ -1,0 +1,4 @@
+.\raid\kamkac\liver\images\ .\raid\kamkac\liver\images\
+.\raid\kamkac\liver\labels\ .\raid\kamkac\liver\labels\
+.\raid\kamkac\hepatic\images\ .\raid\kamkac\hepatic\images\
+.\raid\kamkac\hepatic\labels\ .\raid\kamkac\hepatic\labels\

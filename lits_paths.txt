@@ -1,0 +1,4 @@
+nii.gz .\raid\jachoo\share\liver\liver\imagesTr_gz .\raid\kamkac\liver\images\
+nii.gz .\raid/jachoo\share\liver\liver\labelsTr_gz .\raid\kamkac\liver\labels\
+nii.gz .\raid/jachoo\share\liver\hepatic\imagesTr .\raid\kamkac\hepatic\images\
+nii.gz .\raid/jachoo\share\liver\hepatic\labelsTr .\raid\kamkac\hepatic\labels\
