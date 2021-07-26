@@ -16,9 +16,24 @@ MERGE_PATHS_FILE = 'merge_paths.txt'
 
 class NiiFileConverter:
     @staticmethod
+    def set_bounds(img, MIN_BOUND, MAX_BOUND):
+        image = np.clip(img, MIN_BOUND, MAX_BOUND)
+        return image
+    
+    @staticmethod
+    def normalize(img):
+        image = (img - np.mean(img)) / np.std(img)
+        image = (
+            (image - np.min(image)) / (np.max(image) - np.min(image)))
+        return image
+
+    @staticmethod
     def read_nii_file(nii_file_path):
         img = nib.load(nii_file_path)
         img_fdata = img.get_fdata()
+        #img_fdata = intensity_normalization.normalize.zscore.zscore_normalize(img, mask=None)
+        img_fdata = NiiFileConverter.set_bounds(img_fdata, MIN_IMG_BOUND, MAX_IMG_BOUND)
+        img_fdata = NiiFileConverter.normalize(img_fdata)
         return img_fdata
 
     @staticmethod
