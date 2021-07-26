@@ -2,6 +2,8 @@ import os
 import glob
 import pydicom
 import imageio
+import shutil
+import natsort 
 import numpy as np
 import nibabel as nib
 from pathlib import Path
@@ -10,6 +12,7 @@ from PIL import Image
 LITS_PATHS_FILE = 'lits_paths.txt'
 PG_PATHS_FILE = 'pg_paths.txt'
 ROTATE_PATHS_FILE = 'rotate_paths.txt'
+MERGE_PATHS_FILE = 'merge_paths.txt'
 
 class NiiFileConverter:
     @staticmethod
@@ -141,15 +144,41 @@ class ImageRotator:
                 os.remove(file)
                 img.save(file) 
 
+class DirectoryMerger:
+    def __init__(self, path):
+        self.path = path
+    def save_merged(self):
+        lines = open(self.path, "r").readlines()
+        for line in lines:
+            source, dest = line.split()
+            self.merge(source, dest)
+    def merge(self, source, dest):
+        directories = natsort.natsorted(glob.glob(f'{source}/*'))
+        caseNumber = 0
+        for directory in directories:
+            files = natsort.natsorted(glob.glob(f'{directory}/*'))
+            print(directory)
+            imageNumber = 0
+            for file in files:
+                print(file)
+                shutil.copy2(file, dest+'p'+str(caseNumber)+'i'+str(imageNumber)+'.png')
+                imageNumber = imageNumber + 1
+                print(caseNumber)
+            caseNumber = caseNumber + 1
+        
+
 def main():
-    lits_converter = LitsDbConverter(LITS_PATHS_FILE)
+    #lits_converter = LitsDbConverter(LITS_PATHS_FILE)
     #pg_converter = PgDbConverter(PG_PATHS_FILE)
     
-    lits_converter.save_as_png()
+    #lits_converter.save_as_png()
     #pg_converter.save_as_png()
     
-    image_rotator = ImageRotator(ROTATE_PATHS_FILE)
-    image_rotator.save_rotated()
+    #image_rotator = ImageRotator(ROTATE_PATHS_FILE)
+    #image_rotator.save_rotated()
+    
+    directory_merger = DirectoryMerger(MERGE_PATHS_FILE)
+    directory_merger.save_merged()
     
 if __name__ == "__main__":
     main()
