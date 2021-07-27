@@ -132,6 +132,10 @@ class ImageRotator:
         lines = open(self.path, "r").readlines()
         for line in lines:
             source, dest = line.split()
+            
+            if not os.path.exists(dest):
+                os.makedirs(dest)
+                
             self.rotate(source, dest)
             
     def rotate(self, source, dest):    
@@ -151,6 +155,10 @@ class DirectoryMerger:
         lines = open(self.path, "r").readlines()
         for line in lines:
             source, dest = line.split()
+            
+            if not os.path.exists(dest):
+                os.makedirs(dest)
+                
             self.merge(source, dest)
     def merge(self, source, dest):
         directories = natsort.natsorted(glob.glob(f'{source}/*'))
@@ -168,14 +176,14 @@ class DirectoryMerger:
         
 
 def main():
-    #lits_converter = LitsDbConverter(LITS_PATHS_FILE)
-    #pg_converter = PgDbConverter(PG_PATHS_FILE)
+    lits_converter = LitsDbConverter(LITS_PATHS_FILE)
+    pg_converter = PgDbConverter(PG_PATHS_FILE)
     
-    #lits_converter.save_as_png()
-    #pg_converter.save_as_png()
+    lits_converter.save_as_png()
+    pg_converter.save_as_png()
     
-    #image_rotator = ImageRotator(ROTATE_PATHS_FILE)
-    #image_rotator.save_rotated()
+    image_rotator = ImageRotator(ROTATE_PATHS_FILE)
+    image_rotator.save_rotated()
     
     directory_merger = DirectoryMerger(MERGE_PATHS_FILE)
     directory_merger.save_merged()
