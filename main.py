@@ -14,6 +14,9 @@ PG_PATHS_FILE = 'pg_paths.txt'
 ROTATE_PATHS_FILE = 'rotate_paths.txt'
 MERGE_PATHS_FILE = 'merge_paths.txt'
 
+MIN_IMG_BOUND = -600
+MAX_IMG_BOUND = 1000
+
 class NiiFileConverter:
     @staticmethod
     def set_bounds(img, MIN_BOUND, MAX_BOUND):
@@ -180,13 +183,11 @@ class DirectoryMerger:
         caseNumber = 0
         for directory in directories:
             files = natsort.natsorted(glob.glob(f'{directory}/*'))
-            print(directory)
             imageNumber = 0
             for file in files:
                 print(file)
                 shutil.copy2(file, dest+'p'+str(caseNumber)+'i'+str(imageNumber)+'.png')
                 imageNumber = imageNumber + 1
-                print(caseNumber)
             caseNumber = caseNumber + 1
         
 
