@@ -11,6 +11,7 @@ import re
 import matplotlib.pyplot as plt
 import cv2
 import tensorflow as tf
+import glob
 
 print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
@@ -142,17 +143,36 @@ def GiveMeUnet(inputImage, numFilters = 16, droupouts = 0.1, doBatchNorm = True)
 
 
 # In[6]:
-
-
 inputs = tf.keras.layers.Input((512, 512, 1))
 myTransformer = GiveMeUnet(inputs, droupouts= 0.07)
-myTransformer.compile(optimizer = 'Adam', loss = 'binary_crossentropy', metrics = ['accuracy'] )
 
+prefix_path = "checkpoints\\"
+if not os.path.exists(prefix_path):
+    os.makedirs(prefix_path)
+
+checkpoint_path = prefix_path + "{epoch:04d}.hdf5"
+checkpoint_dir = os.path.dirname(checkpoint_path)
+list_of_files = glob.glob(prefix_path + "*.hdf5")
+latest = max(list_of_files, key=os.path.getctime)
+exists = latest and os.path.isfile(latest)
+
+if(exists):
+    myTransformer.load_weights(latest)
+    print("Weights from checkpoint file loaded")
+
+
+myTransformer.compile(optimizer = 'Adam', loss = 'binary_crossentropy', metrics = ['accuracy'] )
+checkpoint = tf.keras.callbacks.ModelCheckpoint(checkpoint_path, monitor='val_accuracy', verbose=1, mode='max', save_freq="epoch")
+callbacks_list = [checkpoint]
 
 # In[14]:
 
+initial_epoch = 0
+if(exists):
+    initial_epoch = int(latest.replace(prefix_path, "").replace(".hdf5", ""))
+    print("Start from epoch", initial_epoch)
 
-retVal = myTransformer.fit(np.array(framObjTrain['img']), np.array(framObjTrain['mask']), epochs = 10, verbose = 1, validation_split = 0.1)
+retVal = myTransformer.fit(np.array(framObjTrain['img']), np.array(framObjTrain['mask']), epochs = 10, verbose = 1, validation_split = 0.1, callbacks=callbacks_list, initial_epoch=initial_epoch)
 
 
 # In[8]:
