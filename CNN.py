@@ -221,7 +221,7 @@ def Plotter(img, predMask, groundTruth):
     plt.subplot(1,3,3)
     plt.imshow(groundTruth)
     plt.title('Actual mask')
-    plt.savefig(name+'.png')
+    plt.savefig(str(name) + '.png')
 
 
 
