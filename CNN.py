@@ -3,7 +3,7 @@
 
 # In[1]:
 import sys, os
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
+os.environ["CUDA_VISIBLE_DEVICES"]="3"
 
 import numpy as np
 import pandas as pd
@@ -138,7 +138,7 @@ if not os.path.exists(prefix_path):
 checkpoint_path = prefix_path + "{epoch:04d}.hdf5"
 checkpoint_dir = os.path.dirname(checkpoint_path)
 list_of_files = glob.glob(prefix_path + "*.hdf5")
-latest = max(list_of_files, key=os.path.getctime)
+latest = max(list_of_files, key=os.path.getctime, default=0)
 exists = latest and os.path.isfile(latest)
 
 if(exists):
@@ -159,7 +159,7 @@ if(exists):
     initial_epoch = int(latest.replace(prefix_path, "").replace(".hdf5", ""))
     print("Start from epoch", initial_epoch)
 
-retVal = model.fit(np.array(framObjTrain['img']), np.array(framObjTrain['mask']), epochs = 10, verbose = 1, validation_split = 0.1, callbacks=callbacks_list, initial_epoch=initial_epoch)
+retVal = model.fit(np.array(framObjTrain['img']), np.array(framObjTrain['mask']), epochs = 100, verbose = 1, validation_split = 0.1, callbacks=callbacks_list, initial_epoch=initial_epoch)
 
 plt.plot(retVal.history['accuracy'])
 plt.plot(retVal.history['val_accuracy'])
