@@ -3,8 +3,9 @@
 
 # In[1]:
 import sys, os
-os.environ["CUDA_VISIBLE_DEVICES"]="3"
+os.environ["CUDA_VISIBLE_DEVICES"]="0"
 
+from PIL import Image
 import numpy as np
 import pandas as pd
 import re
@@ -32,11 +33,18 @@ def LoadData( frameObj = None, imgPath = None, maskPath = None, shape = 256):
     maskAddr = maskPath + '/'
     
     for i in range (len(imgNames)):
+        
         img = plt.imread(imgAddr + imgNames[i])
         mask = plt.imread(maskAddr + imgNames[i])
-        
+
         img = cv2.resize(img, (shape, shape)) 
         mask = cv2.resize(mask, (shape, shape))
+
+        img = np.asarray(img)
+        mask = np.asarray(mask)
+        
+        img = np.expand_dims(img, axis=2)
+        mask = np.expand_dims(mask, axis=2)
         
         frameObj['img'].append(img)
         frameObj['mask'].append(mask)
@@ -58,18 +66,17 @@ framObjTrain = LoadData( framObjTrain, imgPath = img_path
                         , maskPath = mask_path
                          , shape = 512)
 
-
 # In[4]:
 
 
-plt.figure(figsize = (10, 7))
-plt.subplot(1,2,1)
-plt.imshow(framObjTrain['img'][55])
-plt.title('Image')
-plt.subplot(1,2,2)
-plt.imshow(framObjTrain['mask'][55])
-plt.title('Mask')
-plt.show()
+#plt.figure(figsize = (10, 7))
+#plt.subplot(1,2,1)
+#plt.imshow(framObjTrain['img'][55])
+#plt.title('Image')
+#plt.subplot(1,2,2)
+#plt.imshow(framObjTrain['mask'][55])
+#plt.title('Mask')
+#plt.show()
 
 # In[6]:
 
@@ -145,7 +152,6 @@ if(exists):
     model.load_weights(latest)
     print("Weights from checkpoint file loaded")
 
-
 model.compile(optimizer = 'Adam', loss = 'binary_crossentropy', metrics = ['accuracy'] )
 checkpoint = tf.keras.callbacks.ModelCheckpoint(checkpoint_path, monitor='val_accuracy', verbose=1, mode='max', save_freq="epoch")
 callbacks_list = [checkpoint]
@@ -158,8 +164,8 @@ initial_epoch = 0
 if(exists):
     initial_epoch = int(latest.replace(prefix_path, "").replace(".hdf5", ""))
     print("Start from epoch", initial_epoch)
-
-retVal = model.fit(np.array(framObjTrain['img']), np.array(framObjTrain['mask']), epochs = 100, verbose = 1, validation_split = 0.1, callbacks=callbacks_list, initial_epoch=initial_epoch)
+    
+retVal = model.fit(np.array(framObjTrain['img']), np.array(framObjTrain['mask']), epochs = 10, verbose = 1, validation_split = 0.05, callbacks=callbacks_list, initial_epoch=initial_epoch, batch_size = 3)
 
 plt.plot(retVal.history['accuracy'])
 plt.plot(retVal.history['val_accuracy'])
