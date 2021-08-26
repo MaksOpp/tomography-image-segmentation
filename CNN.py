@@ -2,6 +2,7 @@
 # coding: utf-8
 
 # In[1]:
+from model import unet
 import sys, os
 os.environ["CUDA_VISIBLE_DEVICES"]="3"
 
@@ -74,93 +75,93 @@ plt.show()
 # In[6]:
 
 #Build the model
-inputs = tf.keras.layers.Input((512, 512, 1))
-s = tf.keras.layers.Lambda(lambda x: x / 256)(inputs)
+# inputs = tf.keras.layers.Input((512, 512, 1))
+# s = tf.keras.layers.Lambda(lambda x: x / 256)(inputs)
 
-#Contraction path
-c1 = tf.keras.layers.Conv2D(16, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(s)
-c1 = tf.keras.layers.Dropout(0.1)(c1)
-c1 = tf.keras.layers.Conv2D(16, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c1)
-p1 = tf.keras.layers.MaxPooling2D((2, 2))(c1)
+# #Contraction path
+# c1 = tf.keras.layers.Conv2D(16, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(s)
+# c1 = tf.keras.layers.Dropout(0.1)(c1)
+# c1 = tf.keras.layers.Conv2D(16, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c1)
+# p1 = tf.keras.layers.MaxPooling2D((2, 2))(c1)
 
-c2 = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(p1)
-c2 = tf.keras.layers.Dropout(0.1)(c2)
-c2 = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c2)
-p2 = tf.keras.layers.MaxPooling2D((2, 2))(c2)
+# c2 = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(p1)
+# c2 = tf.keras.layers.Dropout(0.1)(c2)
+# c2 = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c2)
+# p2 = tf.keras.layers.MaxPooling2D((2, 2))(c2)
  
-c3 = tf.keras.layers.Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(p2)
-c3 = tf.keras.layers.Dropout(0.2)(c3)
-c3 = tf.keras.layers.Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c3)
-p3 = tf.keras.layers.MaxPooling2D((2, 2))(c3)
+# c3 = tf.keras.layers.Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(p2)
+# c3 = tf.keras.layers.Dropout(0.2)(c3)
+# c3 = tf.keras.layers.Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c3)
+# p3 = tf.keras.layers.MaxPooling2D((2, 2))(c3)
  
-c4 = tf.keras.layers.Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(p3)
-c4 = tf.keras.layers.Dropout(0.2)(c4)
-c4 = tf.keras.layers.Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c4)
-p4 = tf.keras.layers.MaxPooling2D(pool_size=(2, 2))(c4)
+# c4 = tf.keras.layers.Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(p3)
+# c4 = tf.keras.layers.Dropout(0.2)(c4)
+# c4 = tf.keras.layers.Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c4)
+# p4 = tf.keras.layers.MaxPooling2D(pool_size=(2, 2))(c4)
  
-c5 = tf.keras.layers.Conv2D(256, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(p4)
-c5 = tf.keras.layers.Dropout(0.3)(c5)
-c5 = tf.keras.layers.Conv2D(256, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c5)
+# c5 = tf.keras.layers.Conv2D(256, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(p4)
+# c5 = tf.keras.layers.Dropout(0.3)(c5)
+# c5 = tf.keras.layers.Conv2D(256, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c5)
 
-#Expansive path 
-u6 = tf.keras.layers.Conv2DTranspose(128, (2, 2), strides=(2, 2), padding='same')(c5)
-u6 = tf.keras.layers.concatenate([u6, c4])
-c6 = tf.keras.layers.Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(u6)
-c6 = tf.keras.layers.Dropout(0.2)(c6)
-c6 = tf.keras.layers.Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c6)
+# #Expansive path 
+# u6 = tf.keras.layers.Conv2DTranspose(128, (2, 2), strides=(2, 2), padding='same')(c5)
+# u6 = tf.keras.layers.concatenate([u6, c4])
+# c6 = tf.keras.layers.Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(u6)
+# c6 = tf.keras.layers.Dropout(0.2)(c6)
+# c6 = tf.keras.layers.Conv2D(128, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c6)
  
-u7 = tf.keras.layers.Conv2DTranspose(64, (2, 2), strides=(2, 2), padding='same')(c6)
-u7 = tf.keras.layers.concatenate([u7, c3])
-c7 = tf.keras.layers.Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(u7)
-c7 = tf.keras.layers.Dropout(0.2)(c7)
-c7 = tf.keras.layers.Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c7)
+# u7 = tf.keras.layers.Conv2DTranspose(64, (2, 2), strides=(2, 2), padding='same')(c6)
+# u7 = tf.keras.layers.concatenate([u7, c3])
+# c7 = tf.keras.layers.Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(u7)
+# c7 = tf.keras.layers.Dropout(0.2)(c7)
+# c7 = tf.keras.layers.Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c7)
  
-u8 = tf.keras.layers.Conv2DTranspose(32, (2, 2), strides=(2, 2), padding='same')(c7)
-u8 = tf.keras.layers.concatenate([u8, c2])
-c8 = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(u8)
-c8 = tf.keras.layers.Dropout(0.1)(c8)
-c8 = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c8)
+# u8 = tf.keras.layers.Conv2DTranspose(32, (2, 2), strides=(2, 2), padding='same')(c7)
+# u8 = tf.keras.layers.concatenate([u8, c2])
+# c8 = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(u8)
+# c8 = tf.keras.layers.Dropout(0.1)(c8)
+# c8 = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c8)
  
-u9 = tf.keras.layers.Conv2DTranspose(16, (2, 2), strides=(2, 2), padding='same')(c8)
-u9 = tf.keras.layers.concatenate([u9, c1], axis=3)
-c9 = tf.keras.layers.Conv2D(16, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(u9)
-c9 = tf.keras.layers.Dropout(0.1)(c9)
-c9 = tf.keras.layers.Conv2D(16, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c9)
+# u9 = tf.keras.layers.Conv2DTranspose(16, (2, 2), strides=(2, 2), padding='same')(c8)
+# u9 = tf.keras.layers.concatenate([u9, c1], axis=3)
+# c9 = tf.keras.layers.Conv2D(16, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(u9)
+# c9 = tf.keras.layers.Dropout(0.1)(c9)
+# c9 = tf.keras.layers.Conv2D(16, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(c9)
  
-outputs = tf.keras.layers.Conv2D(1, (1, 1), activation='sigmoid')(c9)
+# outputs = tf.keras.layers.Conv2D(1, (1, 1), activation='sigmoid')(c9)
 
-model = tf.keras.Model(inputs=[inputs], outputs=[outputs])
+# model = tf.keras.Model(inputs=[inputs], outputs=[outputs])
+model = unet()
+# prefix_path = "checkpoints\\"
+# if not os.path.exists(prefix_path):
+#     os.makedirs(prefix_path)
 
-prefix_path = "checkpoints\\"
-if not os.path.exists(prefix_path):
-    os.makedirs(prefix_path)
+# checkpoint_path = prefix_path + "{epoch:04d}.hdf5"
+# checkpoint_dir = os.path.dirname(checkpoint_path)
+# list_of_files = glob.glob(prefix_path + "*.hdf5")
+# latest = max(list_of_files, key=os.path.getctime, default=0)
+# exists = latest and os.path.isfile(latest)
 
-checkpoint_path = prefix_path + "{epoch:04d}.hdf5"
-checkpoint_dir = os.path.dirname(checkpoint_path)
-list_of_files = glob.glob(prefix_path + "*.hdf5")
-latest = max(list_of_files, key=os.path.getctime, default=0)
-exists = latest and os.path.isfile(latest)
-
-if(exists):
-    model.load_weights(latest)
-    print("Weights from checkpoint file loaded")
+# if(exists):
+#     model.load_weights(latest)
+#     print("Weights from checkpoint file loaded")
 
 
-model.compile(optimizer = 'Adam', loss = 'binary_crossentropy', metrics = ['accuracy'] )
-checkpoint = tf.keras.callbacks.ModelCheckpoint(checkpoint_path, monitor='val_accuracy', verbose=1, mode='max', save_freq="epoch")
-callbacks_list = [checkpoint]
-model.summary()
+# model.compile(optimizer = 'Adam', loss = 'binary_crossentropy', metrics = ['accuracy'] )
+# checkpoint = tf.keras.callbacks.ModelCheckpoint(checkpoint_path, monitor='val_accuracy', verbose=1, mode='max', save_freq="epoch")
+# callbacks_list = [checkpoint]
+# model.summary()
 
 
 # In[14]:
 
-initial_epoch = 0
-if(exists):
-    initial_epoch = int(latest.replace(prefix_path, "").replace(".hdf5", ""))
-    print("Start from epoch", initial_epoch)
+# initial_epoch = 0
+# if(exists):
+#     initial_epoch = int(latest.replace(prefix_path, "").replace(".hdf5", ""))
+#     print("Start from epoch", initial_epoch)
 
 retVal = model.fit(np.array(framObjTrain['img']), np.array(framObjTrain['mask']), epochs = 100, verbose = 1, validation_split = 0.1, callbacks=callbacks_list, initial_epoch=initial_epoch)
-
+plt.figure()
 plt.plot(retVal.history['accuracy'])
 plt.plot(retVal.history['val_accuracy'])
 plt.title('Accuracy vs Epochs')
@@ -169,6 +170,7 @@ plt.ylabel('Accuracy')
 plt.legend(['Train', 'Val'], loc = 'upper left')
 plt.savefig('accvsepochs.png')
 
+plt.figure()
 plt.plot(retVal.history['loss'])
 plt.plot(retVal.history['val_loss'])
 plt.title('Loss vs Epochs')
@@ -181,7 +183,7 @@ plt.savefig('loss.png')
 
 # In[8]:
 
-
+plt.figure()
 plt.plot(retVal.history['loss'], label = 'training_loss')
 plt.plot(retVal.history['accuracy'], label = 'training_accuracy')
 plt.legend()
