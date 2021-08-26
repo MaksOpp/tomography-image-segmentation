@@ -148,19 +148,20 @@ model = unet()
 
 
 # model.compile(optimizer = 'Adam', loss = 'binary_crossentropy', metrics = ['accuracy'] )
-# checkpoint = tf.keras.callbacks.ModelCheckpoint(checkpoint_path, monitor='val_accuracy', verbose=1, mode='max', save_freq="epoch")
-# callbacks_list = [checkpoint]
+#checkpoint = tf.keras.callbacks.ModelCheckpoint(checkpoint_path, monitor='val_accuracy', verbose=1, mode='max', save_freq="epoch")
+#callbacks_list = [checkpoint]
 # model.summary()
 
 
 # In[14]:
 
-# initial_epoch = 0
+initial_epoch = 0
 # if(exists):
 #     initial_epoch = int(latest.replace(prefix_path, "").replace(".hdf5", ""))
 #     print("Start from epoch", initial_epoch)
 
-retVal = model.fit(np.array(framObjTrain['img']), np.array(framObjTrain['mask']), epochs = 100, verbose = 1, validation_split = 0.1, callbacks=callbacks_list, initial_epoch=initial_epoch)
+#retVal = model.fit(np.array(framObjTrain['img']), np.array(framObjTrain['mask']), epochs = 100, verbose = 1, validation_split = 0.1, callbacks=callbacks_list, initial_epoch=initial_epoch)
+retVal = model.fit(np.array(framObjTrain['img']), np.array(framObjTrain['mask']), epochs = 100, verbose = 1, validation_split = 0.1, initial_epoch=initial_epoch)
 plt.figure()
 plt.plot(retVal.history['accuracy'])
 plt.plot(retVal.history['val_accuracy'])
