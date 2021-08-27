@@ -6,7 +6,6 @@ import shutil
 import natsort 
 import numpy as np
 import nibabel as nib
-import cv2
 from pathlib import Path
 from PIL import Image
 
@@ -46,11 +45,6 @@ class NiiFileConverter:
         (x,y,z) = fdata.shape
         for k in range(z):
             slice = fdata[:,:,k]
-            
-            slice = slice.astype(np.float64) / slice.max() # normalize the data to 0 - 1
-            slice = 255 * slice 
-            slice = slice.astype(np.uint8)
-            
             imageio.imwrite(os.path.join(dest,'{}.png'.format(k)),slice)
 
 
@@ -191,6 +185,7 @@ class DirectoryMerger:
             files = natsort.natsorted(glob.glob(f'{directory}/*'))
             imageNumber = 0
             for file in files:
+                print(file)
                 shutil.copy2(file, dest+'p'+str(caseNumber)+'i'+str(imageNumber)+'.png')
                 imageNumber = imageNumber + 1
             caseNumber = caseNumber + 1
@@ -198,13 +193,13 @@ class DirectoryMerger:
 
 def main():
     lits_converter = LitsDbConverter(LITS_PATHS_FILE)
-    #pg_converter = PgDbConverter(PG_PATHS_FILE)
+    pg_converter = PgDbConverter(PG_PATHS_FILE)
     
     lits_converter.save_as_png()
-    #pg_converter.save_as_png()
+    pg_converter.save_as_png()
     
-    #image_rotator = ImageRotator(ROTATE_PATHS_FILE)
-    #image_rotator.save_rotated()
+    image_rotator = ImageRotator(ROTATE_PATHS_FILE)
+    image_rotator.save_rotated()
     
     directory_merger = DirectoryMerger(MERGE_PATHS_FILE)
     directory_merger.save_merged()
