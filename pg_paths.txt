@@ -1,2 +1,0 @@
-.\raid\jachoo\share\liver\pg\Liver3D_originals .\raid\jachoo\share\liver\pg\Liver3D_labels .\raid\kamkac\
-.\raid\jachoo\share\liver\tumors\Liver3D_originals .\raid\jachoo\share\liver\tumors\Liver3D_labels .\raid\kamkac\

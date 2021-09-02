@@ -1,0 +1,4 @@
+cuda_visible_devices: 1
+img_path: .//raid//kamkac//merged//images
+mask_path: .//raid//kamkac//merged//labels
+checkpoint_path: checkpoint_path

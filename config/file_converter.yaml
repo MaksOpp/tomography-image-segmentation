@@ -1,0 +1,57 @@
+paths:
+    - lits:
+          - liver:
+                - images:
+                      - type: NIfTI
+                      - extension: nii.gz
+                      - source: .\raid\jachoo\share\liver\liver\imagesTr_gz
+                      - destination: .\raid\kamkac\liver\images\
+                - labels:
+                      - type: NIfTI
+                      - extension: nii.gz
+                      - source: .\raid/jachoo\share\liver\liver\labelsTr_gz
+                      - destination: .\raid\kamkac\liver\labels\
+          - hepatic:
+                - images:
+                      - type: NIfTI
+                      - extension: nii.gz
+                      - source: .\raid/jachoo\share\liver\hepatic\imagesTr
+                      - destination: .\raid\kamkac\hepatic\images\
+                - labels:
+                      - type: NIfTI
+                      - extension: nii.gz
+                      - source: .\raid/jachoo\share\liver\hepatic\labelsTr
+                      - destination: .\raid\kamkac\hepatic\labels\
+    - pg:
+          - liver:
+                - type: DICOM
+                - images: .\raid\jachoo\share\liver\pg\Liver3D_originals
+                - labels: .\raid\jachoo\share\liver\pg\Liver3D_labels
+                - destination: .\raid\kamkac\
+          - tumors:
+                - type: DICOM
+                - images: .\raid\jachoo\share\liver\tumors\Liver3D_originals
+                - labels: .\raid\jachoo\share\liver\tumors\Liver3D_labels
+                - destination: .\raid\kamkac\
+    - merge:
+          - images:
+                - source: .\raid\kamkac\liver\images\
+                - destination: .\raid\kamkac\merged\images\
+          - labels:
+                - source: .\raid\kamkac\liver\labels\
+                - destination: .\raid\kamkac\merged\labels\
+    - rotate:
+          - liver:
+                - images:
+                      - source: .\raid\kamkac\liver\images\
+                      - destination: .\raid\kamkac\liver\images\
+                - labels:
+                      - source: .\raid\kamkac\liver\labels\
+                      - destination: .\raid\kamkac\liver\labels\
+          - hepatic:
+                - images:
+                      - source: .\raid\kamkac\hepatic\images\
+                      - destination: .\raid\kamkac\hepatic\images\
+                - labels:
+                      - source: .\raid\kamkac\hepatic\labels\
+                      - destination: .\raid\kamkac\hepatic\labels\
