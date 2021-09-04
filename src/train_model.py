@@ -8,14 +8,13 @@ import tensorflow as tf
 import glob
 
 import yaml_config
-config = yaml_config.getContentFromFile('../config/train_model.yaml')
+config = yaml_config.takeConfig('../config/train_model.yaml')
 
 os.environ["CUDA_VISIBLE_DEVICES"] = config['cuda_visible_devices']
 img_path = config['path']['img']
 mask_path = config['path']['mask']
 validation_img_path = config['path']['val_img']
 validation_mask_path = config['path']['val_mask']
-prefix_path = config['path']['checkpoint']
 
 NO_OF_EPOCHS = config['epochs']
 BATCH_SIZE = config['batch_size']

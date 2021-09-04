@@ -12,7 +12,7 @@ import random
 from pathlib import Path
 
 import yaml_config
-config = yaml_config.getContentFromFile('../config/split_data.yaml')
+config = yaml_config.takeConfig('../config/split_data.yaml')
 
 INPUT_FILES_PATH = config['input_path']
 OUTPUT_FILES_PATH = config['output_path']

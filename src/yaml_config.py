@@ -107,7 +107,9 @@ def fileConverterYaml(filepath):
         'lits_paths': lits_paths,
         'pg_paths': pg_paths,
         'merge_paths': merge_paths,
-        'rotate_paths': rotate_paths
+        'rotate_paths': rotate_paths,
+        'min_img_bound': content['min_img_bound'],
+        'max_img_bound': content['max_img_bound']
     }
 
 def pgDicomMetadataToCsv(filepath):

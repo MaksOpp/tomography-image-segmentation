@@ -10,7 +10,7 @@ from pathlib import Path
 from PIL import Image
 
 import yaml_config
-config = yaml_config.getContentFromFile('../config/file_converter.yaml')
+config = yaml_config.takeConfig('../config/file_converter.yaml')
 
 LITS_PATHS_FILE = config['lits_paths']
 PG_PATHS_FILE = config['pg_paths']

@@ -3,7 +3,7 @@ import pydicom
 import pandas as pd 
 
 import yaml_config
-config = yaml_config.getContentFromFile('../config/pg_dicom_converter.yaml')
+config = yaml_config.takeConfig('../config/pg_dicom_metadata_to_csv.yaml')
 
 PG_PATHS_FILE = config['pg_paths']
 OUTPUT_FILE = config['output_file']

@@ -8,7 +8,7 @@ import tensorflow as tf
 import glob
 
 import yaml_config
-config = yaml_config.getContentFromFile('../config/cnn.yaml')
+config = yaml_config.takeConfig('../config/cnn.yaml')
 
 os.environ["CUDA_VISIBLE_DEVICES"] = config['cuda_visible_devices']
 img_path = config['path']['img']
