@@ -1,0 +1,82 @@
+Setting up file_converter.yaml
+==============================
+
+To start you need to set up yaml configuration files:
+
+1. Firstly specify min and max image bound
+::
+    
+  min_img_bound: -600
+  max_img_bound: 1000
+
+2. Then input paths for pg, lits, merge and rotate paths
+
+::
+
+    path:
+        lits:
+                liver:
+                    image:
+                            type: NIfTI
+                            extension: nii.gz
+                            source: /raid/jachoo/share/liver/liver/imagesTr_gz
+                            destination: /raid/kamkac/liver/images/
+                    label:
+                            type: NIfTI
+                            extension: nii.gz
+                            source: /raid/jachoo/share/liver/liver/labelsTr_gz
+                            destination: /raid/kamkac/liver/labels/
+                hepatic:
+                    image:
+                            type: NIfTI
+                            extension: nii.gz
+                            source: /raid/jachoo/share/liver/hepatic/imagesTr
+                            destination: /raid/kamkac/hepatic/images/
+                    label:
+                            type: NIfTI
+                            extension: nii.gz
+                            source: /raid/jachoo/share/liver/hepatic/labelsTr
+                            destination: /raid/kamkac/hepatic/labels/
+        pg:
+                liver:
+                    type: DICOM
+                    image: /raid/jachoo/share/liver/pg/Liver3D_originals
+                    label: /raid/jachoo/share/liver/pg/Liver3D_labels
+                    destination: /raid/kamkac/
+                tumors:
+                    type: DICOM
+                    image: /raid/jachoo/share/liver/tumors/Liver3D_originals
+                    label: /raid/jachoo/share/liver/tumors/Liver3D_labels
+                    destination: /raid/kamkac/
+        merge:
+                image:
+                    source: /raid/kamkac/liver/images/raid/jachoo/share/liver/liver/imagesTr_gz/
+                    destination: /raid/kamkac/merged/images/
+                label:
+                    source: /raid/kamkac/liver/labels/raid/jachoo/share/liver/liver/labelsTr_gz/
+                    destination: /raid/kamkac/merged/labels/
+        rotate:
+                liver:
+                    image:
+                            source: /raid/kamkac/liver/images/raid/jachoo/share/liver/liver/imagesTr_gz/
+                            destination: /raid/kamkac/liver/images/
+                    label:
+                            source: /raid/kamkac/liver/labels/raid/jachoo/share/liver/liver/labelsTr_gz/
+                            destination: /raid/kamkac/liver/labels/
+                hepatic:
+                    image:
+                            source: /raid/kamkac/hepatic/images/raid/jachoo/share/liver/hepatic/imagesTr/
+                            destination: /raid/kamkac/hepatic/images/
+                    label:
+                            source: /raid/kamkac/hepatic/labels/raid/jachoo/share/liver/hepatic/labelsTr/
+                            destination: /raid/kamkac/hepatic/labels/
+
+Launch script
+=========================
+
+When file_converter.rst is fullfilled then there is possibility to launch the script file
+
+::
+
+  python src/file_converter.py
+
