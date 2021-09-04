@@ -127,28 +127,3 @@ def pgDicomMetadataToCsv(filepath):
         'pg_paths': pg_paths,
         'output_file': content['output_file']
     }
-
-filename = '../config/cnn.yaml'
-config = takeConfig(filename)
-print(config)
-print()
-
-filename = '../config/file_converter.yaml'
-config = takeConfig(filename)
-print(config)
-print()
-
-filename = '../config/pg_dicom_metadata_to_csv.yaml'
-config = takeConfig(filename)
-print(config)
-print()
-
-filename = '../config/split_data.yaml'
-config = takeConfig(filename)
-print(config)
-print()
-
-filename = '../config/train_model.yaml'
-config = takeConfig(filename)
-print(config)
-print()
