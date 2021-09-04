@@ -9,13 +9,16 @@ import nibabel as nib
 from pathlib import Path
 from PIL import Image
 
-LITS_PATHS_FILE = 'lits_paths.txt'
-PG_PATHS_FILE = 'pg_paths.txt'
-ROTATE_PATHS_FILE = 'rotate_paths.txt'
-MERGE_PATHS_FILE = 'merge_paths.txt'
+import yaml_config
+config = yaml_config.getContentFromFile('../config/file_converter.yaml')
 
-MIN_IMG_BOUND = -600
-MAX_IMG_BOUND = 1000
+LITS_PATHS_FILE = config['lits_paths']
+PG_PATHS_FILE = config['pg_paths']
+ROTATE_PATHS_FILE = config['rotate_paths']
+MERGE_PATHS_FILE = config['merge_paths']
+
+MIN_IMG_BOUND = config['min_img_bound']
+MAX_IMG_BOUND = config['max_img_bound']
 
 class NiiFileConverter:
     @staticmethod
@@ -63,11 +66,11 @@ class DicomFileConverter:
         imageio.imwrite(os.path.join(dest,'{}.png'.format(filename)),img)
 
 class LitsDbConverter:
-    def __init__(self, path):
-        self.path = path
+    def __init__(self, path_list):
+        self.path_list = path_list
 
     def save_as_png(self):
-        lines = open(self.path, "r").readlines()
+        lines = self.path_list
         for line in lines:
             ext, source, dest = line.split()
 
@@ -88,8 +91,8 @@ class LitsDbConverter:
 
 
 class PgDbConverter:
-    def __init__(self, path):
-        self.path = path
+    def __init__(self, path_list):
+        self.path_list = path_list
 
     def save_as_png(self):
         self.save_type_as_png('*_P.nii.gz', 'pg_p')
@@ -100,8 +103,7 @@ class PgDbConverter:
         self.save_type_as_png('*_T.nii.gz', 'tumors')
 
     def save_type_as_png(self, ext, dest_subfolder):
-        f = open(self.path, "r")
-        lines = f.readlines()
+        lines = self.path_list
         for line in lines:
             images_path, labels_path, dest = line.split()
 

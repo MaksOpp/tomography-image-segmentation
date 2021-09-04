@@ -1,1 +1,13 @@
-output: pg_dicom_metadata.csv
+output_file: pg_dicom_metadata.csv
+path:
+  pg:
+    liver:
+      type: DICOM
+      image: /raid/jachoo/share/liver/pg/Liver3D_originals
+      label: /raid/jachoo/share/liver/pg/Liver3D_labels
+      destination: /raid/kamkac/
+    tumors:
+      type: DICOM
+      image: /raid/jachoo/share/liver/tumors/Liver3D_originals
+      label: /raid/jachoo/share/liver/tumors/Liver3D_labels
+      destination: /raid/kamkac/

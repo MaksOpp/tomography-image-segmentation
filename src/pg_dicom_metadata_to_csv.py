@@ -2,17 +2,20 @@ import glob
 import pydicom
 import pandas as pd 
 
-PG_PATHS_FILE = 'pg_paths.txt'
+import yaml_config
+config = yaml_config.getContentFromFile('../config/pg_dicom_converter.yaml')
+
+PG_PATHS_FILE = config['pg_paths']
+OUTPUT_FILE = config['output_file']
 
 class PgDicomMetaDataToCsvConverter:
-    def __init__(self, path):
-        self.path = path
+    def __init__(self, path_list):
+        self.path_list = path_list
         self.meta_cols = []
         self.first_run = True
 
     def dicom_directories_to_csv(self):
-        f = open(self.path, "r")
-        lines = f.readlines()
+        lines = self.path_list
 
         for line in lines:
             ext, source, dest = line.split()
@@ -49,7 +52,7 @@ class PgDicomMetaDataToCsvConverter:
 
             if(len(csv_col_dict) > 0):
                 df_csv_col_dict = pd.DataFrame(csv_col_dict)
-                df_csv_col_dict.to_csv('pg_dicom_metadata.csv', mode='a', index=False, header=False)
+                df_csv_col_dict.to_csv(OUTPUT_FILE, mode='a', index=False, header=False)
 
         except: 
             pass
@@ -57,7 +60,7 @@ class PgDicomMetaDataToCsvConverter:
     def create_csv_file_on_first_run(self):
         col_dict = {col: [] for col in self.meta_cols} 
         df_csv_col_dict = pd.DataFrame(col_dict)
-        df_csv_col_dict.to_csv('pg_dicom_metadata.csv', index=False)
+        df_csv_col_dict.to_csv(OUTPUT_FILE, index=False)
 
     def get_meta_cols(self, data):
         self.meta_cols = data.dir()

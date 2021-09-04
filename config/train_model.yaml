@@ -1,0 +1,8 @@
+cuda_visible_devices: 1
+epochs: 100
+batch_size: 30
+path:
+  img: raid/data/train_frames/train
+  mask: raid/data/train_masks/train
+  val_img: raid/data/val_frames/val
+  val_mask: raid/data/val_masks/val
