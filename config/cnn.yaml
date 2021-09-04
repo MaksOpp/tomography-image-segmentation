@@ -1,0 +1,7 @@
+cuda_visible_devices: 1
+path:
+  img: raid//final_data//test//images
+  mask: raid//final_data//test//labels
+  val_img: raid//final_data//val//images
+  val_mask: raid//final_data//val//labels
+  checkpoint: raid//checkpoint//

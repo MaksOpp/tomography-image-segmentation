@@ -1,2 +1,0 @@
-.\raid\kamkac\liver\images\ .\raid\kamkac\merged\images\
-.\raid\kamkac\liver\labels\ .\raid\kamkac\merged\labels\
