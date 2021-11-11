@@ -25,7 +25,7 @@ class NiiFileConverter:
     def set_bounds(img, MIN_BOUND, MAX_BOUND):
         image = np.clip(img, MIN_BOUND, MAX_BOUND)
         return image
-    
+
     @staticmethod
     def normalize(img):
         image = (img - np.mean(img)) / np.std(img)
@@ -48,6 +48,9 @@ class NiiFileConverter:
         (x,y,z) = fdata.shape
         for k in range(z):
             slice = fdata[:,:,k]
+            slice = slice.astype(np.float64) / slice.max() # normalize the data to 0 - 1
+            slice = 255 * slice
+            slice = slice.astype(np.uint8)
             imageio.imwrite(os.path.join(dest,'{}.png'.format(k)),slice)
 
 
@@ -80,9 +83,12 @@ class LitsDbConverter:
             if(ext == 'nii.gz'):
                 self.save_nii_files(source, dest)
 
+
     def save_nii_files(self, source, dest):
-        files = glob.glob(f'{source}/*')
+        files = glob.glob(f'{source}/*')   
         for file in files:
+            if 'liver_43' in file:
+                continue
             filename = os.path.splitext(os.path.splitext(file)[0])[0].split('\\')[-1]
             dest_path = dest + filename
             if not os.path.exists(dest_path):
@@ -149,7 +155,8 @@ class ImageRotator:
         self.path = path
 
     def save_rotated(self):
-        lines = open(self.path, "r").readlines()
+        lines = self.path
+
         for line in lines:
             source, dest = line.split()
             
@@ -168,43 +175,55 @@ class ImageRotator:
                 os.remove(file)
                 img.save(file) 
 
+
 class DirectoryMerger:
     def __init__(self, path):
         self.path = path
     def save_merged(self):
-        lines = open(self.path, "r").readlines()
+        lines = self.path
         for line in lines:
             source, dest = line.split()
-            
             if not os.path.exists(dest):
+                
                 os.makedirs(dest)
                 
             self.merge(source, dest)
     def merge(self, source, dest):
         directories = natsort.natsorted(glob.glob(f'{source}/*'))
+        print(directories)
         caseNumber = 0
         for directory in directories:
             files = natsort.natsorted(glob.glob(f'{directory}/*'))
             imageNumber = 0
             for file in files:
-                print(file)
                 shutil.copy2(file, dest+'p'+str(caseNumber)+'i'+str(imageNumber)+'.png')
                 imageNumber = imageNumber + 1
             caseNumber = caseNumber + 1
+            
         
 
 def main():
     lits_converter = LitsDbConverter(LITS_PATHS_FILE)
-    pg_converter = PgDbConverter(PG_PATHS_FILE)
+    # # #pg_converter = PgDbConverter(PG_PATHS_FILE)
     
     lits_converter.save_as_png()
-    pg_converter.save_as_png()
+    # # #pg_converter.save_as_png()
     
-    image_rotator = ImageRotator(ROTATE_PATHS_FILE)
-    image_rotator.save_rotated()
-    
+    # image_rotator = ImageRotator(ROTATE_PATHS_FILE)
+    # image_rotator.save_rotated()
+    # # # print(MERGE_PATHS_FILE)
     directory_merger = DirectoryMerger(MERGE_PATHS_FILE)
     directory_merger.save_merged()
+
+    print(len(glob.glob(f'/home/kamkac/raid/liver6/images/raid/jachoo/share/liver/liver/imagesTr_gz/*')))
+    print(len(glob.glob(f'/home/kamkac/raid/liver6/labels/raid/jachoo/share/liver/liver/labelsTr_gz/*')))
+    print(len(glob.glob(f'/raid/kamkac/merged6_new/images/*')))
+    print(len(glob.glob(f'/raid/kamkac/merged6_new/labels/*')))
+
+
+    print(len(glob.glob(f'/home/kamkac/raid/liver6/images/raid/jachoo/share/liver/liver/imagesTr_gz/*')))
+    print(len(glob.glob(f'/home/kamkac/raid/liver6/labels/raid/jachoo/share/liver/liver/labelsTr_gz/*')))
+
     
 if __name__ == "__main__":
     main()
